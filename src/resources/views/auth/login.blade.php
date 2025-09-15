@@ -1,33 +1,47 @@
-<h1>ログイン</h1>
+@extends('layouts.app')
+@section('title','ログイン')
 
-@if ($errors->any())
-  <ul style="color:red;">
-    @foreach ($errors->all() as $e)
-      <li>{{ $e }}</li>
-    @endforeach
-  </ul>
-@endif
+@push('page_css')
+<link rel="stylesheet" href="{{ asset('css/auth/login.css') }}?v=15">
+@endpush
 
-@if (session('status'))
-  <div>{{ session('status') }}</div>
-@endif
+@section('content')
+<div class="auth-wrap">
+  <h1 class="auth-title">ログイン</h1>
 
-<form method="POST" action="{{ route('login') }}" novalidate>
-  @csrf
+  {{-- 全体エラー（login バッグ） --}}
+  @if ($errors->login->any())
+    <ul class="auth-errors">
+      @foreach ($errors->login->all() as $error)
+        <li>{{ $error }}</li>
+      @endforeach
+    </ul>
+  @endif
 
-  <div>
-    <label>メールアドレス</label>
-    <input type="email" name="email" value="{{ old('email') }}">
-    @error('email') <div style="color:red;">{{ $message }}</div> @enderror
+  <form method="POST" action={{ route('login')}} class="auth-form" novalidate>
+    @csrf
+
+    {{-- メールアドレス --}}
+    <label class="form-label">メールアドレス
+      <input type="email" name="email" value="{{ old('email') }}">
+      @error('email','login')
+        <p class="field-error">{{ $message }}</p>
+      @enderror
+    </label>
+
+    {{-- パスワード --}}
+    <label class="form-label">パスワード
+      <input type="password" name="password">
+      @error('password','login')
+        <p class="field-error">{{ $message }}</p>
+      @enderror
+    </label>
+
+    <button type="submit" class="btn-primary">ログインする</button>
+  </form>
+
+  <div class="auth-link">
+    <a href="{{ route('register') }}">会員登録はこちら</a>
   </div>
-
-  <div>
-    <label>パスワード</label>
-    <input type="password" name="password">
-    @error('password') <div style="color:red;">{{ $message }}</div> @enderror
-  </div>
-
-  <button type="submit">ログイン</button>
-</form>
-
-<p><a href="{{ route('register') }}">会員登録へ</a></p>
+</div>
+@endsection

@@ -1,0 +1,100 @@
+/* ===== login.css ===== */
+
+/* 全体レイアウト */
+.auth-wrap {
+  width: min(720px, 92%);
+  margin: 64px auto 120px;
+  background: #fff;
+  padding: 48px 56px 56px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+/* タイトル */
+.auth-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+}
+
+/* フォーム要素 */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  text-align: left;
+}
+
+.form-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+  gap: 6px;
+}
+
+.form-label input {
+  height: 44px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.form-label input:focus {
+  border-color: #7aa7ff;
+  box-shadow: 0 0 0 3px rgba(122,167,255,.25);
+}
+
+/* ボタン */
+.btn-primary {
+  display: block;
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 6px;
+  background: #FF5555;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: filter .15s ease, transform .02s ease;
+}
+
+.btn-primary:hover { filter: brightness(.98); }
+.btn-primary:active { transform: translateY(1px); }
+
+/* 会員登録リンク */
+.auth-link {
+  margin-top: 18px;
+  text-align: center;
+}
+
+.auth-link a {
+  color: #0073cc;  /* 水色 */
+  text-decoration: none; /* 下線なし */
+  font-size: 14px;
+}
+
+/* エラー表示 */
+.auth-errors {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px;
+  color: #e11d48;
+  font-size: 14px;
+  text-align: left;
+}
+
+.field-error {
+  color: #e11d48;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* 背景色を白固定 */
+body {
+  background: #fff;
+}
