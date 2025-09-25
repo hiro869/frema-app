@@ -10,14 +10,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
-use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Fortify;
+use Laravel\Fortify\Contracts\RegisterResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // 登録完了後のリダイレクト
         $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
             public function toResponse($request)
             {
@@ -28,35 +27,35 @@ class FortifyServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // ビュー割り当て
+        /** ===== Fortify の画面割り当て ===== */
         Fortify::loginView(fn () => view('auth.login'));
         Fortify::registerView(fn () => view('auth.register'));
 
-        // 新規登録処理クラス
+        /** ===== 新規登録の作成クラスを指定 ===== */
         Fortify::createUsersUsing(CreateNewUser::class);
 
-        // ログイン認証
+        /** ===== ログイン認証（FormRequest で検証） ===== */
         Fortify::authenticateUsing(function (Request $request) {
-            // ① LoginRequestでバリデーション
-            $formRequest = app(LoginRequest::class);
+            // LoginRequest のルール／メッセージをそのまま使う
+            $form = app(LoginRequest::class);
 
             Validator::make(
                 $request->all(),
-                $formRequest->rules(),
-                $formRequest->messages()
-            )->validateWithBag('login');   // loginバッグに保存
+                $form->rules(),
+                $form->messages()
+            )->validate(); // デフォルトの $errors バッグに入る
 
-            // ② 認証処理
+            // 認証
             $user = User::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                return $user;
+                return $user; // 認証成功
             }
 
-            // ③ 認証失敗時
+            // 認証失敗（評価要件の文言）
             throw ValidationException::withMessages([
                 'email' => 'ログイン情報が登録されていません',
-            ])->errorBag('login');
+            ]);
         });
     }
 }

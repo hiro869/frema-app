@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MypageController;
+
+
 
 // -----------------------------------
 // 商品関連
@@ -27,22 +30,23 @@ Route::post('/sell', [ItemController::class, 'store'])->name('items.store');
 // 購入関連
 // -----------------------------------
 // PG06: 商品購入
-Route::get('/purchase/{item}', [PurchaseController::class, 'index'])->name('purchase.index');
-Route::post('/purchase/{item}', [PurchaseController::class, 'store'])->name('purchase.store');
+Route::get('/purchase/{item_id}', [PurchaseController::class, 'index'])->name('purchase.index');
+Route::post('/purchase/{item_id}', [PurchaseController::class, 'store'])->name('purchase.store');
 
 // PG07: 送付先住所変更
-Route::get('/purchase/address/{item}', [PurchaseController::class, 'address'])->name('purchase.address');
-Route::post('/purchase/address/{item}', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
+Route::get('/purchase/address/{item_id}', [PurchaseController::class, 'address'])->name('purchase.address');
+Route::post('/purchase/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('purchase.updateAddress');
 
 // -----------------------------------
 // プロフィール関連
 // -----------------------------------
-// PG09: プロフィール画面
-Route::get('/mypage', [ProfileController::class, 'index'])->name('profile.index');
 
-// PG10: プロフィール編集
-Route::get('/mypage/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-Route::post('/mypage/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/mypage', [MypageController::class, 'index'])->name('mypage.index');
+    Route::get('/mypage/profile', [MypageController::class, 'edit'])->name('mypage.edit');
+    Route::patch('/mypage/profile', [MypageController::class, 'update'])->name('mypage.update');
+});
 
 // PG11, PG12: 購入一覧・出品一覧（クエリパラメータで切替）
 // /mypage?page=buy

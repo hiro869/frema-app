@@ -2,7 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -12,15 +11,18 @@ class CreateNewUser implements CreatesNewUsers
 {
     public function create(array $input): User
     {
-        // ← FormRequest の rules()/messages() をそのまま利用
-        $request   = app(RegisterRequest::class);
-        $validator = Validator::make(
-            $input,
-            $request->rules(),
-            $request->messages(),
-            method_exists($request, 'attributes') ? $request->attributes() : []
-        );
-        $validator->validate();
+        Validator::make($input, [
+            'name'                  => ['required', 'string', 'max:255'],
+            'email'                 => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password'              => ['required', 'string', 'min:8', 'confirmed'],
+        ], [
+            'name.required'         => 'お名前を入力してください',
+            'email.required'        => 'メールアドレスを入力してください',
+            'email.email'           => 'メールアドレスは正しい形式で入力してください',
+            'password.required'     => 'パスワードを入力してください',
+            'password.min'          => 'パスワードは8文字以上で入力してください',
+            'password.confirmed'    => 'パスワードと一致しません',
+        ])->validate();
 
         return User::create([
             'name'     => $input['name'],

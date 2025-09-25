@@ -1,0 +1,92 @@
+/* ===== リセット気味に余白を消す（上の黒帯をピッタリに） ===== */
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+/* ===== ヘッダー共通 ===== */
+.site-header {
+  background: #000;                 /* 黒帯 */
+  color: #fff;
+}
+.header-inner {
+  height: 56px;                     /* 画像と同じくらいの帯高さ */
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  max-width: none;                  /* 幅いっぱい */
+  padding: 0 16px;                  /* 画面端にほぼピッタリ */
+}
+
+/* ロゴ */
+.logo {
+  display: inline-flex;
+  align-items: center;
+}
+.logo img {
+  display: block;
+  height: 28px;                     /* 画像の見た目に合わせて微調整 */
+}
+
+/* 検索（ボタンなし・白い入力だけ） */
+.search {
+  flex: 1;                          /* 中央で伸びる */
+  display: flex;
+}
+.search input {
+  width: 100%;
+  height: 34px;
+  background: #fff;
+  border: none;                      /* 枠なし（Figma準拠） */
+  border-radius: 6px;
+  padding: 0 14px;
+  font-size: 14px;
+}
+
+/* 右ナビ */
+.global-nav {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* テキストリンク（白文字） */
+.nav-link {
+  background: none;
+  border: none;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 0;                        /* ボタン感を消す */
+}
+
+/* 出品だけ白ボタン */
+.btn-primary {
+  display: inline-block;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 6px;
+  padding: 8px 14px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ロゴだけヘッダー（login/register 用） */
+.site-header--simple .header-inner {
+  justify-content: flex-start;       /* 左ロゴのみ */
+}
+.site-header--simple .search,
+.site-header--simple .global-nav {
+  display: none;
+}
+
+/* メイン余白（任意） */
+.site-main {
+  padding: 24px 16px;
+}
+
+/* nav 内の logout フォームを横並びに */
+.nav-inline-form { display: inline; }
