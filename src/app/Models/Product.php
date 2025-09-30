@@ -58,4 +58,5 @@ class Product extends Model
     {
         return !is_null($this->sold_at);
     }
+    public function category() {return $this->belongsTo(Category::class);}
 }

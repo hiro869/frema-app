@@ -38,7 +38,6 @@
               </div>
               <div class="meta">
                 <p class="name">{{ $product->name }}</p>
-                <p class="price">¥{{ number_format($product->price) }}</p>
               </div>
             </a>
           </li>

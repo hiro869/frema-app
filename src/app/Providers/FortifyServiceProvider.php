@@ -11,20 +11,38 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
-use Laravel\Fortify\Contracts\RegisterResponse;
+use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
+use Laravel\Fortify\contracts\LoginResponse;
 
 class FortifyServiceProvider extends ServiceProvider
 {
+    /**
+     * サービス登録
+     */
     public function register(): void
     {
-        $this->app->instance(RegisterResponse::class, new class implements RegisterResponse {
-            public function toResponse($request)
-            {
-                return redirect()->to('/mypage/profile');
+        $this->app->instance(
+            \Laravel\Fortify\Contracts\RegisterResponse::class,
+            new class implements \Laravel\Fortify\Contracts\RegisterResponse {
+                public function toResponse($request)
+                {
+                    return redirect()->route('profile.edit');
+                }
             }
-        });
+        );
+        $this->app->instance(
+            LoginResponse::class,
+            new class implements LoginResponse {
+                public function toResponse($request)
+                {
+                    return redirect()->route('items.index');
+                }
+            }
+        );
     }
-
+    /**
+     * 起動処理
+     */
     public function boot(): void
     {
         /** ===== Fortify の画面割り当て ===== */
@@ -36,23 +54,23 @@ class FortifyServiceProvider extends ServiceProvider
 
         /** ===== ログイン認証（FormRequest で検証） ===== */
         Fortify::authenticateUsing(function (Request $request) {
-            // LoginRequest のルール／メッセージをそのまま使う
+            // LoginRequest のルール／メッセージを使用して検証
             $form = app(LoginRequest::class);
 
             Validator::make(
                 $request->all(),
                 $form->rules(),
                 $form->messages()
-            )->validate(); // デフォルトの $errors バッグに入る
+            )->validate();
 
-            // 認証
+            // 認証処理
             $user = User::where('email', $request->email)->first();
 
             if ($user && Hash::check($request->password, $user->password)) {
-                return $user; // 認証成功
+                return $user;
             }
 
-            // 認証失敗（評価要件の文言）
+            // 失敗時（要件の文言）
             throw ValidationException::withMessages([
                 'email' => 'ログイン情報が登録されていません',
             ]);

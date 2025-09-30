@@ -10,6 +10,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->call([
+            CategorySeeder::class,
+        ]);
+
         // テスト用ユーザーを1件作成（存在すれば再利用）
         $user = User::firstOrCreate(
             ['email' => 'test@example.com'],

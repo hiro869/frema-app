@@ -1,0 +1,72 @@
+/* コンテナ */
+.sell-container { max-width: 720px; margin: 40px auto; padding: 0 16px; }
+.sell-title     { text-align: center; font-size: 26px; font-weight: 700; margin-bottom: 24px; }
+.section-title  { font-size: 16px; font-weight: 700; margin: 24px 0 12px; }
+
+.form-group   { margin-bottom: 18px; }
+.form-label   { display:block; font-weight: 700; margin-bottom: 8px; }
+
+/* 画像枠（簡易） */
+.image-drop {
+  border: 2px dashed #e5e5e5; border-radius: 8px;
+  padding: 24px; text-align: center; position: relative;
+}
+.image-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.image-drop .btn-like { display: inline-block; padding: 8px 14px; border: 1px solid #f66; color:#f66; border-radius:6px; }
+
+/* 入力（見本のように枠線タイプ） */
+.input, .textarea, .select {
+  width: 100%;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  padding: 10px 12px;
+  background: #fff;
+  outline: none;
+  font-size: 14px;
+}
+.input:focus, .textarea:focus, .select:focus { border-color: #f66; }
+
+/* 価格の ¥ 表示 */
+.price-wrapper { position: relative; width: 100%; }
+.price-wrapper::before {
+  content: "¥";
+  position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+  color: #333;
+}
+.section-title {
+    font-size: 23px;
+    color: #b7b7b7;
+    border-bottom: 1px solid #ccc;
+}
+.price-input { padding-left: 24px; }
+
+/* カテゴリ pill */
+.category-list { display: flex; flex-wrap: wrap; gap: 10px; }
+.category-label { cursor: pointer; }
+.category-input { display: none; }
+.category-item {
+  display: inline-block; padding: 6px 12px;
+  border: 1px solid #f66; border-radius: 999px;
+  color: #f66; background: #fff; transition: .2s;
+}
+.category-input:checked + .category-item { background: #f66; color:#fff; }
+
+/* ボタン */
+.form-actions { margin-top: 24px; text-align: center; }
+.sell-btn {
+  display: inline-block; width: 100%;
+  padding: 12px 16px; border: none; border-radius: 6px;
+  background: #ff6b6b; color: #fff; font-weight: 700; cursor: pointer;
+}
+.btn-primary:hover { opacity: .92; }
+
+/* エラー */
+.text-error { color:#e00; font-size: 13px; margin-top: 6px; }
+/* 入力欄の幅を統一 */
+.input,
+.textarea,
+.select {
+  width: 100%;        /* 親の幅いっぱいに揃える */
+  box-sizing: border-box; /* padding や border を含めて幅を計算する */
+  display: block;
+}
