@@ -4,10 +4,16 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\MypageController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\LikeController;
 
 // =================== 商品関連 ===================
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
 Route::get('/item/{item}', [ItemController::class, 'show'])->name('items.show');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/items/{product}/comments', [CommentController::class, 'store'])->name('comments.store');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/sell',  [ItemController::class, 'create'])->name('items.create');
@@ -24,8 +30,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/mypage/profile', [MypageController::class, 'update'])->name('profile.update');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::post('/items/{product}/like', [LikeController::class, 'store'])->name('items.like');
+    Route::delete('/items/{product}/like', [LikeController::class, 'destroy'])->name('items.unlike');
+});
+
 // =================== 購入関連（必要なら） ===================
-// Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('purchase.index')->middleware('auth');
-// Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
-// Route::get('/purchase/address/{item}', [PurchaseController::class, 'address'])->name('purchase.address')->middleware('auth');
-// Route::post('/purchase/address/{item}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update')->middleware('auth');
+Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('purchase.index')->middleware('auth');
+Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
+Route::get('/purchase/address/{item}', [PurchaseController::class, 'address'])->name('purchase.address')->middleware('auth');
+Route::post('/purchase/address/{item}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update')->middleware('auth');

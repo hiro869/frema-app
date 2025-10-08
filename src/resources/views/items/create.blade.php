@@ -8,33 +8,37 @@
 <div class="sell-container">
   <h1 class="sell-title">商品の出品</h1>
 
-  <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data" class="sell-form">
+  <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data" class="sell-form" novalidate>
     @csrf
 
     {{-- 画像 --}}
     <div class="form-group">
       <label class="form-label">商品画像</label>
-      <div class="image-drop">
-        <input type="file" name="image" accept="image/*">
-        <span class="btn-like">画像を選択する</span>
+      <div class="image-drop" id="imageDrop">
+        <input id="image" type="file" name="image" accept="image/*">
+
+        {{-- 最初はボタンが中央に表示される --}}
+        <div class="preview-wrap" id="previewWrap">
+          <span id="pickTrigger" class="btn-like">画像を選択する</span>
+        </div>
       </div>
       @error('image') <p class="text-error">{{ $message }}</p> @enderror
     </div>
 
     <h2 class="section-title">商品の詳細</h2>
 
-    {{-- カテゴリ（1つ選択：ラジオ / 送信名は配列） --}}
+    {{-- カテゴリ --}}
     <div class="form-group">
       <label class="form-label">カテゴリ</label>
       <div class="category-list">
         @foreach($categories as $cat)
           <label class="category-label">
             <input
-              type="radio"
-              name="category_ids[]"
-              value="{{ $cat->id }}"
-              class="category-input"
-              {{ collect(old('category_ids', []))->contains($cat->id) ? 'checked' : '' }}>
+  type="radio"
+  name="category_id"
+  value="{{ $cat->id }}"
+  class="category-input"
+  {{ (string)old('category_id') === (string)$cat->id ? 'checked' : '' }}>
             <span class="category-item">{{ $cat->name }}</span>
           </label>
         @endforeach
@@ -79,7 +83,7 @@
     <div class="form-group">
       <label for="price" class="form-label">販売価格</label>
       <div class="price-wrapper">
-        <input id="price" name="price" type="number" min="1" value="{{ old('price') }}" class="input price-input">
+        <input id="price" name="price" type="number" inputmode="numeric" pattern="[0-9]*" value="{{ old('price') }}" class="input price-input">
       </div>
       @error('price') <p class="text-error">{{ $message }}</p> @enderror
     </div>
@@ -89,4 +93,47 @@
     </div>
   </form>
 </div>
+
+{{-- 画像プレビューJS --}}
+<script>
+  const input       = document.getElementById('image');
+  const previewWrap = document.getElementById('previewWrap');
+  const pickTrigger = document.getElementById('pickTrigger');
+  const imageDrop   = document.getElementById('imageDrop');
+
+  // クリックでファイル選択
+  pickTrigger.addEventListener('click', () => input.click());
+  imageDrop.addEventListener('click', (e) => {
+    if (e.target.tagName.toLowerCase() === 'img') return;
+    input.click();
+  });
+
+  // プレビュー切り替え
+  input.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    previewWrap.innerHTML = '';
+
+    if (!file) {
+      // 選択解除 → ボタンに戻す
+      const btn = document.createElement('span');
+      btn.id = 'pickTrigger';
+      btn.className = 'btn-like';
+      btn.textContent = '画像を選択する';
+      btn.addEventListener('click', () => input.click());
+      previewWrap.appendChild(btn);
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('画像ファイルを選択してください');
+      input.value = '';
+      return;
+    }
+
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.onload = () => URL.revokeObjectURL(img.src);
+    previewWrap.appendChild(img);
+  });
+</script>
 @endsection

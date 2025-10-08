@@ -1,0 +1,196 @@
+/* コンテナ */
+.detail-container {
+  max-width: 1080px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+/* 2カラム配置 */
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(360px, 560px) 1fr; /* 左:画像 幅固定/可変, 右:可変 */
+  gap: 40px;
+  align-items: start;
+}
+
+/* 左：画像 */
+.thumb {
+  position: relative;
+}
+.thumb img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.badge-sold {
+  position: absolute;
+  left: 12px;
+  top: 12px;
+  background: #111;
+  color: #fff;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: 4px;
+}
+
+/* 右：テキスト */
+.panel .title { font-size: 26px; font-weight: 700; margin: 0 0 8px; }
+.panel .brand { color: #666; margin-bottom: 8px; }
+
+.price-line { display:flex; align-items: baseline; gap:10px; margin: 6px 0 14px; }
+.price { font-size: 28px; font-weight: 700; }
+.tax { font-size: 18px;}
+
+.socials { display:flex; justify-content: left; gap:40px; margin-bottom: 12px; }
+.icon-btn { display:flex; flex-direction: column; align-items:center; gap:6px; color:#333; font-size: 14px;}
+.icon-btn .ico { width:30px; height:30px; stroke-width: 2.3; stroke: #333; fill: none; stroke:#333; stroke-width:1; }
+
+/* 購入ボタン（赤・枠なし・黒いアウトライン消す） */
+.btn-buy {
+  width: 100%;
+  padding: 14px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ff6b6b;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 8px 0 22px;
+  outline: none;
+}
+.btn-buy:focus { outline: none; box-shadow: none; }
+.btn-buy:disabled { opacity:.5; cursor:not-allowed; }
+
+/* セクション */
+.sec { font-size:18px; font-weight:700; margin:22px 0 10px; }
+
+/* 商品情報（下線ナシで1行左右） */
+.info-rows { display:flex; flex-direction:column; gap:8px; }
+.row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; }
+.label { color:#666; }
+.vals { display:flex; gap:8px; align-items:center; }
+.pill { border:1px solid #ddd; border-radius:999px; padding:4px 10px; font-size:12px; }
+
+/* コメント */
+.comments { margin-top: 18px; }
+.comment-list { display:flex; flex-direction:column; gap:12px; margin:0 0 10px; padding:0; list-style:none; }
+.comment { display:flex; gap:12px; align-items:flex-start; }
+.comment .avatar { width:36px; height:36px; border-radius:50%; background:#ddd; flex:0 0 auto; }
+.comment .head { display:flex; gap:10px; font-size:12px; color:#666; margin-bottom:2px; }
+.comment.empty { color:#888; padding:10px; background:#f4f4f4; border-radius:6px; }
+
+.comment-form textarea {
+  width: 100%;
+  border:1px solid #ccc;
+  border-radius:6px;
+  padding:10px 12px;
+  resize: vertical;
+}
+.err {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+.btn-comment {
+  display:block;
+  margin-top:10px;
+  padding:12px 16px;
+  background:#ff6b6b;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  font-weight:700;
+  cursor:pointer;
+}
+.login-note { color:#666; margin-top:6px; }
+
+/* レスポンシブ（狭い幅は縦積み） */
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+/* ========== いいねボタン周り ========== */
+
+/* 全てのアイコンボタン共通設定 */
+.icon-btn {
+  border: none;             /* ★ 枠線を消す */
+  background: none;         /* ★ 背景色なし */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
+  transition: all 0.2s ease;
+}
+
+/* 星・吹き出しアイコンのSVG */
+.icon-btn .ico {
+  width: 26px;
+  height: 26px;
+  fill: none;               /* ★ 初期状態は塗りなし（白星） */
+  stroke: #555;             /* 枠色グレー */
+  stroke-width: 1.5;
+  transition: all 0.25s ease;
+}
+
+/* いいね済み（likedクラス付き） */
+.icon-btn.liked .ico {
+  fill: #ff3b3b;            /* ★ 星を赤く塗る */
+  stroke: #ff3b3b;
+  transform: scale(1.1);    /* 少し拡大して押した感じ */
+}
+
+/* カウント数字 */
+.icon-btn span {
+  font-size: 15px;
+  color: #333;
+  margin-left: 2px;
+}
+
+/* アイコンホバー時の軽いエフェクト */
+.icon-btn:hover .ico {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+/* ==== いいね & コメントのアイコンボタン（強制上書き版） ==== */
+.icon-btn,
+.icon-btn:focus,
+.icon-btn:active {
+  border: 0 !important;            /* ★枠を消す */
+  outline: none !important;        /* フォーカス枠も消す */
+  background: transparent !important; /* 背景色なし */
+  box-shadow: none !important;     /* 影なし */
+  -webkit-appearance: none;        /* iOSのデフォルト装飾を消す */
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon-btn .ico {
+  width: 28px;
+  height: 28px;
+  fill: none;                      /* ★未いいね時は塗りなし */
+  stroke: #555;
+  stroke-width: 1.8;
+  transition: transform .2s, fill .2s, stroke .2s;
+}
+
+/* いいね済み状態（赤く塗る） */
+.icon-btn.liked .ico {
+  fill: #ff3b3b;
+  stroke: #ff3b3b;
+  transform: scale(1.06);
+}
+
+.icon-btn span {
+  font-size: 16px;
+  color: #333;
+}

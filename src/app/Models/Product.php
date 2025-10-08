@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Product extends Model
 {
@@ -51,6 +52,12 @@ class Product extends Model
             $query->where('name', 'like', "%{$keyword}%");
         }
         return $query;
+    }
+    public function getImageUrlAttribute(): string
+    {
+        return Str::startsWith($this->image_path, ['http://','https://'])
+            ? $this->image_path
+            : asset('storage/'.$this->image_path);
     }
 
     /** Sold判定（アクセサ） */

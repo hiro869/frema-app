@@ -2,63 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
 
 class MypageController extends Controller
 {
-    /** マイページ（閲覧） /mypage */
+    // /mypage （プロフィール＋タブ一覧）
     public function index(Request $request)
     {
-        $user = auth()->user();
-        $tab  = $request->query('page'); // 'buy' or 'sell' など拡張用
+        $user = Auth::user();
+        $tab  = $request->query('tab', 'sold'); // sold | bought
 
-        // 必要に応じて購入/出品一覧を取得する処理を追記
-        // $bought = $user->purchases()->with('product')->latest()->get();
-        // $selling = $user->products()->latest()->get();
+        // 出品した商品
+        $soldProducts = Product::withCount(['likers','comments'])
+            ->where('user_id', $user->id)
+            ->latest()
+            ->paginate(12, ['*'], 'sold_page');
 
-        return view('profile.index', compact('user', 'tab' /*, 'bought', 'selling'*/));
+        // 購入した商品（purchases.user_id が自分）
+        $boughtProducts = Product::with('purchase')
+            ->whereHas('purchase', fn($q) => $q->where('user_id', $user->id))
+            ->latest()
+            ->paginate(12, ['*'], 'bought_page');
+
+        return view('profile.index', compact('user','tab','soldProducts','boughtProducts'));
     }
 
-    /** プロフィール編集表示 /mypage/profile (GET) */
+    // /mypage/profile （編集フォーム）
     public function edit()
     {
         $user = auth()->user();
-
-        // 初回設定かどうか（全て空なら true）
-        $isFirst = empty($user->zip)
-            && empty($user->address1)
-            && empty($user->address2)
-            && empty($user->avatar_path);
-
+        $isFirst = is_null($user->name) && is_null($user->zip) && is_null($user->address1);
         return view('profile.edit', compact('user', 'isFirst'));
     }
 
-    /** プロフィール更新 /mypage/profile (PATCH) */
-    public function update(ProfileRequest $request)
+    // PATCH /mypage/profile （更新）
+    public function update(Request $request)
     {
-        $user = auth()->user();
-        $data = $request->validated();
+        $data = $request->validate([
+            'name'      => ['required','string','max:255'],
+            'zip'       => ['nullable','string','max:255'],
+            'address1'  => ['nullable','string','max:255'],
+            'address2'  => ['nullable','string','max:255'],
+            'avatar' => ['nullable','image','max:5120'], // 5MB
+        ]);
 
-        // 画像が来ていたら差し替え
+        $user = Auth::user();
+
         if ($request->hasFile('avatar')) {
-            if ($user->avatar_path) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
-            $data['avatar_path'] = $request->file('avatar')->store('avatars', 'public');
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar_path = $path;
         }
+        $user->name     = $data['name'];
+        $user->zip      = $data['zip']     ?? null;
+        $user->address1 = $data['address1'] ?? null;
+        $user->address2 = $data['address2'] ?? null;
+        $user->save();
 
-        // フィールドを更新（未入力は既存値を保持）
-        $user->fill([
-            'name'        => $data['name']      ?? $user->name,
-            'zip'         => $data['zip']       ?? null,
-            'address1'    => $data['address1']  ?? null,
-            'address2'    => $data['address2']  ?? null,
-            'avatar_path' => $data['avatar_path'] ?? $user->avatar_path,
-        ])->save();
-
-        // 更新後は商品一覧トップへ
-        return redirect()->route('items.index')->with('status', 'プロフィールを更新しました。');
+        return redirect()->route('profile.index')->with('status', 'プロフィールを更新しました。');
     }
 }

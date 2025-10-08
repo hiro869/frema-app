@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
-use App\Http\Requests\ExhibitionRequest;   // ← 追加
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ExhibitionRequest;
 
 class ItemController extends Controller
 {
     /** 一覧 */
-    public function index(\Illuminate\Http\Request $request)
+    public function index(Request $request)
     {
         $tab     = $request->query('tab', 'all');
         $keyword = $request->query('keyword');
@@ -40,17 +41,24 @@ class ItemController extends Controller
         return view('items.index', compact('products','tab','keyword'));
     }
 
-    /** 詳細（カテゴリは belongsTo 前提） */
+    /** 詳細（カテゴリは多対多） */
     public function show($id)
     {
         $product = Product::with([
-            'category',        // ← 多対多の 'categories' ではなく単数
+            'categories',       // ← 多対多
             'likers',
             'purchase',
+            'comments' => function ($commentQuery) {
+                $commentQuery->latest();
+            },
             'comments.user',
         ])->withCount(['likers','comments'])->findOrFail($id);
 
-        return view('items.show', compact('product'));
+        $likedByMe = auth()->check()
+            ? $product->likers()->whereKey(auth()->id())->exists()
+            : false;
+
+        return view('items.show', compact('product','likedByMe'));
     }
 
     /** 出品フォーム */
@@ -60,26 +68,31 @@ class ItemController extends Controller
         return view('items.create', compact('categories'));
     }
 
-    /** 出品保存（ExhibitionRequest で検証） */
-    public function store(ExhibitionRequest $request)
+    /** 出品保存（多対多・ファイル保存） */
+    public function store(\App\Http\Requests\ExhibitionRequest $request)
     {
-        $validated = $request->validated();
+        // ① ExhibitionRequest で検証済みのデータだけを取得
+        $data = $request->validated();
 
-        // 画像保存
-        $path = $request->file('image')->store('products', 'public');
+        // ② 画像を保存（storage/app/public/product_images）
+        $path = $request->file('image')->store('product_images', 'public');
 
-        // 商品作成（カテゴリは外部キー）
-        $product = Product::create([
-            'user_id'     => Auth::id(),
-            'category_id' => $validated['category_id'],   // ← 単一カテゴリ
-            'name'        => $validated['name'],
-            'brand'       => $validated['brand'] ?? null,
-            'description' => $validated['description'],
-            'price'       => $validated['price'],
-            'condition'   => $validated['condition'],
+        // ③ 商品を作成
+        $product = \App\Models\Product::create([
+            'user_id'     => \Illuminate\Support\Facades\Auth::id(),
+            'name'        => $data['name'],
+            'brand'       => $data['brand'] ?? null,
+            'price'       => $data['price'],
+            'description' => $data['description'] ?? null,
+            'condition'   => $data['condition'],
             'image_path'  => $path,
         ]);
 
-        return redirect()->route('items.create')->with('status', '出品しました。');
+        // ④ カテゴリ紐付け（中間テーブル）
+        $product->categories()->sync($data['category_id']);
+
+        // ⑤ 成功時は詳細へ
+        return redirect()->route('items.show', $product)
+                         ->with('status', '出品しました');
     }
 }
