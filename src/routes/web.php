@@ -35,8 +35,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/items/{product}/like', [LikeController::class, 'destroy'])->name('items.unlike');
 });
 
-// =================== 購入関連（必要なら） ===================
-Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('purchase.index')->middleware('auth');
-Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
+// =================== 購入関連 ===================
+Route::get('/purchase/success', [PurchaseController::class, 'success'])->name('purchase.success');
+
 Route::get('/purchase/address/{item}', [PurchaseController::class, 'address'])->name('purchase.address')->middleware('auth');
 Route::post('/purchase/address/{item}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update')->middleware('auth');
+
+Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('purchase.index')->middleware('auth');
+Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
+
+Route::post('/stripe/webhook', [PurchaseController::class, 'webhook'])->name('stripe.webhook');
+
