@@ -71,17 +71,100 @@ class PurchaseController extends Controller
 
         return redirect()->away($session->url);
     }
-
-    // 成功戻り（表示だけ、確定はWebhookでやる）
-    public function success(\Illuminate\Http\Request $request)
+    public function address(Product $item)
     {
-        // ここではまだ確定保存しない（Webhookで確定）
-        return redirect()
-            ->route('items.index')
-            ->with('status', '決済処理を受け付けました。完了反映まで少しお待ちください。');
+        $user = auth()->user();
+        return view('purchase.address', [
+            'product' => $item,
+            'user' => $user,
+        ]);
     }
 
-    // Stripe Webhook（支払い完了の確定を受ける）
+    public function updateAddress(Request $request, Product $item)
+    {
+        $validated = $request->validate([
+            'zip' => ['required', 'string'],
+            'address1' => ['required', 'string'],
+            'address2' => ['nullable', 'string'],
+        ]);
+
+        $user = auth()->user();
+        $user->update($validated);
+
+        return redirect()->route('purchase.index', $item)
+        ->with('status', '住所を更新しました。');
+    }
+
+
+    // … index() / store() は今のままでOK …
+
+    // ✅ 成功戻りで確定保存する版（Webhookなしでも動く）
+    public function success(Request $request)
+    {
+        $sessionId = $request->query('session_id');
+        if (!$sessionId) {
+            return redirect()->route('items.index')
+                ->with('status', 'セッションIDが見つかりませんでした。');
+        }
+
+        $stripe = new StripeClient(config('services.stripe.secret'));
+
+        // Checkout セッションを取得して支払い状態を確認
+        $session = $stripe->checkout->sessions->retrieve($sessionId, []);
+
+        // ここが "paid" なら決済完了
+        if (($session->payment_status ?? null) !== 'paid') {
+            // 未決済やキャンセル等の場合
+            $pid = $session->metadata->product_id ?? null;
+            return $pid
+                ? redirect()->route('purchase.index', $pid)->with('status', '支払いが完了していません。')
+                : redirect()->route('items.index')->with('status', '支払いが完了していません。');
+        }
+
+        // メタ情報から商品・購入者を取り出す
+        $productId     = $session->metadata->product_id ?? null;
+        $buyerId       = $session->metadata->buyer_id ?? null;
+        $paymentMethod = $session->metadata->payment_method ?? null;
+
+        if (!$productId || !$buyerId) {
+            return redirect()->route('items.index')->with('status', '購入情報が取得できませんでした。');
+        }
+
+        // 二重作成防止しつつDB更新
+        DB::transaction(function () use ($productId, $buyerId, $paymentMethod) {
+            /** @var \App\Models\Product $product */
+            $product = \App\Models\Product::lockForUpdate()->find($productId);
+            if (!$product) return;
+
+            // 既にSOLDなら何もしない
+            if ($product->sold_at) return;
+
+            // ユーザー住所をスナップショット
+            $user = \App\Models\User::find($buyerId);
+            $snapshot = [
+                'zip'      => $user->zip,
+                'address1' => $user->address1,
+                'address2' => $user->address2,
+            ];
+
+            // 購入レコード作成
+            \App\Models\Purchase::create([
+                'user_id'           => $buyerId,
+                'product_id'        => $product->id,
+                'price_at_purchase' => $product->price,
+                'address_snapshot'  => $snapshot,     // JSON
+                'payment_method'    => $paymentMethod // 'convenience' or 'card'
+            ]);
+
+            // 🔑 SOLD は sold_at のみ更新（is_soldカラムは使わない）
+            $product->update([
+                'sold_at' => now(),
+            ]);
+        });
+
+        return redirect()->route('items.index')->with('status', '購入が完了しました。');
+    }
+
     public function webhook(Request $request)
     {
         $payload = $request->getContent();

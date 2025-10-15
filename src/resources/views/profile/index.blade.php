@@ -38,7 +38,6 @@
         <div class="thumb"><img src="{{ $product->image_url }}" alt="{{ $product->name }}"></div>
         <div class="body">
           <div class="title">{{ $product->name }}</div>
-          <div class="price">¥{{ number_format($product->price) }}</div>
         </div>
       </a>
     @empty
