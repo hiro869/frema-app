@@ -1,11 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Http\Request;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+
 
 // =================== 商品関連 ===================
 Route::get('/', [ItemController::class, 'index'])->name('items.index');
@@ -45,4 +48,17 @@ Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('p
 Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
 
 Route::post('/stripe/webhook', [PurchaseController::class, 'webhook'])->name('stripe.webhook');
+// 誘導画面
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+// 認証完了メール内リンクが来る先ー>プロフィール設定画面へ
+Route::get('/email/verify/{id}/{hash}',function (EmailVerificationRequest $request) {
+    $request->fulfill();
+    return redirect()->route('profile.edit')->with('status','メール認証が完了しました。');
+})->middleware(['auth','signed'])->name('verification.verify');
 
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('status', '認証メールを再送しました。');
+})->middleware(['auth','throttle:6,1'])->name('verification.send');

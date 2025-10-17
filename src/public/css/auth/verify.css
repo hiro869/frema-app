@@ -1,0 +1,55 @@
+/* 画面全体はレイアウトのまま。中央にシンプル配置 */
+.verify-wrap{
+  max-width: 720px;
+  margin: 64px auto 96px;
+  text-align: center;
+  background: #fff;
+}
+
+
+.verify-text{
+  margin: 0 0 24px;
+  color: #222;
+}
+
+/* ボタン・リンクの並び */
+.verify-actions{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+/* グレーの角丸ボタン（見本通り） */
+.verify-btn{
+  display: inline-block;
+  padding: 10px 18px;
+  background: #e5e7eb;        /* 薄いグレー */
+  color: #111;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* 下の薄い青リンクっぽいボタン */
+.verify-resend{
+  background: none;
+  border: none;
+  color: #3b82f6;             /* 青 */
+  font-size: 14px;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.verify-resend:hover{
+  text-decoration: underline;
+}
+
+.verify-notice{
+  margin-top: 10px;
+  color: #16a34a;             /* 緑（再送メッセージ） */
+  font-size: 14px;
+}

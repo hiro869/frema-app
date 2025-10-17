@@ -7,6 +7,12 @@
 @endpush
 
 @section('content')
+@php
+    use Illuminate\Support\Facades\Storage;
+    $avatarUrl = $user->avatar_path
+      ? asset('storage/'.$user->avatar_path)
+      : asset('img/avatar-placeholder.png');
+@endphp
 <section class="profile-page">
   <div class="profile-wrap">
     <h1 class="profile-title">プロフィール設定</h1>
@@ -24,14 +30,23 @@
       @csrf
       @method('PATCH')
 
-      <div class="avatar-field">
-        <div class="avatar-thumb">
-          @if(!$isFirst && $user->avatar_path)
-            <img src="{{ asset('storage/'.$user->avatar_path) }}" alt="">
-          @endif
-        </div>
-        <input type="file" name="avatar" accept="image/png,image/jpeg">
-      </div>
+     <div class="avatar-field">
+      <img id="avatarPreview" class="avatar" src="{{ $avatarUrl }}" alt="">
+      <input id="avatarInput" type="file" name="avatar"
+      accept="image/png,image/jpeg" class="file-input" />
+
+      <label for="avatarInput" class="file-label">画像を選択する</label>
+     </div>
+
+<script>
+  // 選んだ画像を即プレビュー
+  document.getElementById('avatar').addEventListener('change', e => {
+    const file = e.target.files?.[0];
+    if (file) {
+      document.getElementById('avatarPreview').src = URL.createObjectURL(file);
+    }
+  });
+</script>
 
       <label class="form-row">
         <span class="form-label">ユーザー名</span>

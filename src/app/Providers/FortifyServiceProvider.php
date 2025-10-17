@@ -26,15 +26,19 @@ class FortifyServiceProvider extends ServiceProvider
             new class implements \Laravel\Fortify\Contracts\RegisterResponse {
                 public function toResponse($request)
                 {
-                    return redirect()->route('profile.edit');
+                    return redirect()->route('verification.notice');
                 }
             }
         );
         $this->app->instance(
-            LoginResponse::class,
-            new class implements LoginResponse {
+            \Laravel\Fortify\Contracts\LoginResponse::class,
+            new class implements \Laravel\Fortify\Contracts\LoginResponse {
                 public function toResponse($request)
                 {
+                    $user = $request->user();
+                    if ($user && method_exists($user, 'hasVerifiedEmail') && !$user->hasVerifiedEmail()) {
+                        return redirect()->route('verification.notice');
+                    }
                     return redirect()->route('items.index');
                 }
             }
