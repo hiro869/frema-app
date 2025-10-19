@@ -7,3 +7,5 @@ RUN apt-get update && apt-get install -y \
 
 # Composer をインストール
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY ./conf.d/uploads.ini /usr/local/etc/php/conf.d/uploads.ini

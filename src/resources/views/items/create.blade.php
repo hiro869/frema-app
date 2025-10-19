@@ -96,44 +96,39 @@
 
 {{-- 画像プレビューJS --}}
 <script>
-  const input       = document.getElementById('image');
-  const previewWrap = document.getElementById('previewWrap');
-  const pickTrigger = document.getElementById('pickTrigger');
-  const imageDrop   = document.getElementById('imageDrop');
+  // ✅ 修正版
+const input       = document.getElementById('image');
+const previewWrap = document.getElementById('previewWrap');
+const pickTrigger = document.getElementById('pickTrigger');
 
-  // クリックでファイル選択
-  pickTrigger.addEventListener('click', () => input.click());
-  imageDrop.addEventListener('click', (e) => {
-    if (e.target.tagName.toLowerCase() === 'img') return;
-    input.click();
-  });
+// ← imageDrop.addEventListener は削除！
 
-  // プレビュー切り替え
-  input.addEventListener('change', (e) => {
-    const file = e.target.files && e.target.files[0];
-    previewWrap.innerHTML = '';
+pickTrigger.addEventListener('click', () => input.click());
 
-    if (!file) {
-      // 選択解除 → ボタンに戻す
-      const btn = document.createElement('span');
-      btn.id = 'pickTrigger';
-      btn.className = 'btn-like';
-      btn.textContent = '画像を選択する';
-      btn.addEventListener('click', () => input.click());
-      previewWrap.appendChild(btn);
-      return;
-    }
+input.addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  previewWrap.innerHTML = '';
 
-    if (!file.type.startsWith('image/')) {
-      alert('画像ファイルを選択してください');
-      input.value = '';
-      return;
-    }
+  if (!file) {
+    const btn = document.createElement('span');
+    btn.id = 'pickTrigger';
+    btn.className = 'btn-like';
+    btn.textContent = '画像を選択する';
+    btn.addEventListener('click', () => input.click());
+    previewWrap.appendChild(btn);
+    return;
+  }
 
-    const img = document.createElement('img');
-    img.src = URL.createObjectURL(file);
-    img.onload = () => URL.revokeObjectURL(img.src);
-    previewWrap.appendChild(img);
-  });
+  if (!file.type.startsWith('image/')) {
+    alert('画像ファイルを選択してください');
+    input.value = '';
+    return;
+  }
+
+  const img = document.createElement('img');
+  img.src = URL.createObjectURL(file);
+  img.onload = () => URL.revokeObjectURL(img.src);
+  previewWrap.appendChild(img);
+});
 </script>
 @endsection

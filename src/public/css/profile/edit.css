@@ -1,162 +1,103 @@
-/* =============================
-   プロフィールページ全体
-   ============================= */
+/* ===== プロフィール設定ページ全体 ===== */
 .profile-page {
-  background: #fff; /* 背景を白にして他と干渉しないように */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 0;
 }
 
-/* ページ中央に白いカード風の枠 */
-.profile-page .profile-wrap {
-  width: min(760px, 92%);
-  margin: 48px auto 120px;
-  padding: 32px 40px 48px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+/* ===== 全体ラップ ===== */
+.profile-wrap {
+  width: 400px; /* 全体の幅を固定 */
+  text-align: center; /* タイトルだけ中央揃え */
 }
 
-/* =============================
-   タイトル（例：「プロフィール設定」）
-   ============================= */
-.profile-page .profile-title {
-  text-align: center;
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 24px;
+/* ===== タイトル ===== */
+.profile-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-align: center; /* ← 中央寄せ */
 }
 
-/* =============================
-   エラーメッセージ（バリデーション用）
-   ============================= */
-.profile-page .profile-errors {
-  list-style: none;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  background: #fff1f2;
-  color: #e11d48;
-  border-radius: 6px;
-  font-size: 14px;
-}
-
-/* =============================
-   プロフィール画像エリア
-   ============================= */
-
-/* 画像（丸く小さく） */
-.avatar {
-  width: 120px;            /* サイズ調整（100〜150pxでもOK） */
-  height: 120px;
-  border-radius: 50%;       /* 丸くする */
-  object-fit: cover;        /* 中央を切り抜き */
-  background-color: #eee;   /* 画像がないときのグレー背景 */
-  display: block;
-  margin: 0 auto 12px;      /* 中央寄せ＋下に少し余白 */
-}
-
-/* 画像＋ボタン全体の位置調整 */
+/* ===== アバターとボタン（左寄せ配置） ===== */
 .avatar-field {
   display: flex;
-  flex-direction: column;   /* 縦並び */
-  align-items: center;      /* 中央寄せ */
-  gap: 8px;
-  margin-bottom: 20px;
+  align-items: center;
+  justify-content: flex-start; /* ← 左寄せ！ */
+  gap: 20px; /* アイコンとボタンの間の余白 */
+  margin-bottom: 30px;
 }
 
-/* アバターの外枠（念のためのバックアップ） */
-.profile-page .avatar-thumb {
-  width: 72px;
-  height: 72px;
+.avatar {
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: #eee;
-  overflow: hidden;
-  flex: none;
-}
-.profile-page .avatar-thumb img {
-  width: 100%;
-  height: 100%;
   object-fit: cover;
+  border: 1px solid #ccc;
 }
 
-/* 「画像を選択する」ボタンデザイン */
 .file-label {
   display: inline-block;
-  padding: 6px 12px;
-  border: 1px solid #ef4444;
-  color: #ef4444;
-  border-radius: 6px;
+  padding: 8px 14px;
+  color: #ef4444 !important;
+  background-color: #fff !important;
+  border: 1px solid #ef4444 !important;
+  border-radius: 5px;
   cursor: pointer;
   font-size: 14px;
-  transition: background 0.2s;
+  transition: 0.3s;
 }
 .file-label:hover {
-  background: #fff5f5;
+  background-color: #ef4444 !important;
+  color: #fff !important;
 }
 
-/* input自体は完全非表示 */
+
 .file-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
+  display: none;
 }
 
-/* =============================
-   入力フォーム
-   ============================= */
-.profile-page .form-row {
-  margin-bottom: 16px;
-}
-
-.profile-page .form-label {
-  display: block;
-  font-size: 14px;
-  margin-bottom: 6px;
-}
-
-/* テキスト入力 */
-.profile-page input[type="text"] {
+/* ===== フォーム部分 ===== */
+.profile-form {
   width: 100%;
-  height: 40px;
-  border: 1px solid #ddd;
+  text-align: left; /* ← 中の文字を左寄せに */
+}
+
+.profile-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.profile-form input[type="text"],
+.profile-form input[type="email"],
+.profile-form input[type="password"] {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 0 12px;
-  font-size: 16px;
-  outline: none;
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-size: 14px;
+  box-sizing: border-box;
+  margin-bottom: 18px;
+  text-align: left;
 }
 
-/* フォーカス時の青いハイライト */
-.profile-page input[type="text"]:focus {
-  border-color: #7aa7ff;
-  box-shadow: 0 0 0 3px rgba(122, 167, 255, 0.25);
-}
-
-/* =============================
-   「更新する」ボタン
-   ============================= */
-.profile-page .profile-submit {
-  display: block;
+/* ===== 更新ボタン ===== */
+.profile-form button {
   width: 100%;
-  height: 44px;
+  background-color: #ef4444;
+  color: #fff;
   border: none;
   border-radius: 6px;
-  background: #FF5555;
-  color: #fff;
-  font-size: 16px;
-  font-weight: 700;
-  margin-top: 8px;
+  padding: 12px 0;
+  font-size: 15px;
+  font-weight: bold;
   cursor: pointer;
-  transition: filter 0.15s ease, transform 0.02s ease;
+  transition: background 0.3s;
 }
 
-.profile-page .profile-submit:hover {
-  filter: brightness(0.98);
-}
-
-.profile-page .profile-submit:active {
-  transform: translateY(1px);
+.profile-form button:hover {
+  background-color: #d63636;
 }

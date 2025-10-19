@@ -31,7 +31,7 @@
           <li class="card">
             <a href="{{ url('/item/'.$product->id) }}" class="card-link">
               <div class="thumb">
-                <img src="{{ $product->image_path }}" alt="{{ $product->name }}">
+                <img src="{{ $product->image_url }}" alt="{{ $product->name }}">
                 @if($product->sold_at)
                   <span class="badge-sold">Sold</span>
                 @endif

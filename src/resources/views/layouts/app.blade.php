@@ -36,7 +36,7 @@
           <a class="btn-primary" href="{{ route('items.create') }}">出品</a>
         @else
           <a class="nav-link" href="{{ route('login') }}">ログイン</a>
-          <a class="nav-link" href="{{ route('register') }}">会員登録</a>
+          <a class="nav-link" href="{{ route('register') }}">マイページ</a>
           <a class="btn-primary" href="{{ route('items.create') }}">出品</a>
         @endauth
       </nav>

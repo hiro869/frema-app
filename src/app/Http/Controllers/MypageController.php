@@ -62,4 +62,12 @@ class MypageController extends Controller
 
         return redirect()->route('profile.index')->with('status', 'プロフィールを更新しました。');
     }
+
+        public function getImageUrlAttribute(): string
+    {
+        if (!$this->image_path) {
+            return asset('images/noimage.png'); // public/images/noimage.png を用意
+        }
+        return asset('storage/' . ltrim($this->image_path, '/'));
+    }
 }

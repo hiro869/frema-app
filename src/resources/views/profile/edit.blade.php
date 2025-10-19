@@ -77,4 +77,30 @@
     </form>
   </div>
 </section>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const input  = document.getElementById('avatarInput');   // <input type="file">
+  const imgEl  = document.getElementById('avatarPreview'); // <img>（現在のアバター）
+
+  if (!input || !imgEl) return;
+
+  input.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (!file) return;
+
+    // 画像以外は弾く
+    if (!file.type.startsWith('image/')) {
+      alert('画像ファイルを選択してください');
+      input.value = '';
+      return;
+    }
+
+    // いま選んだ画像を即プレビューに反映
+    const url = URL.createObjectURL(file);
+    imgEl.src = url;
+    // メモリ解放（読み込み完了後でOK）
+    imgEl.onload = () => URL.revokeObjectURL(url);
+  });
+});
+</script>
 @endsection
