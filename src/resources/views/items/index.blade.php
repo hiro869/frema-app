@@ -44,8 +44,8 @@
         @endforeach
       </ul>
 
-      <div class="pager">
-        {{ $products->links() }}
+      <div class="pagination">
+        {{ $products->links('components.pagination') }}
       </div>
     @endif
   </section>

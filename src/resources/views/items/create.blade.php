@@ -34,13 +34,13 @@
         @foreach($categories as $cat)
           <label class="category-label">
             <input
-  type="radio"
-  name="category_id"
+  type="checkbox"
+  name="category_ids[]"
   value="{{ $cat->id }}"
   class="category-input"
-  {{ (string)old('category_id') === (string)$cat->id ? 'checked' : '' }}>
-            <span class="category-item">{{ $cat->name }}</span>
-          </label>
+  {{ collect(old('category_ids', isset($product) ? $product->categories->pluck('id')->toArray() : []))->contains($cat->id) ? 'checked' : ''}}>
+  <span class="category-item">{{ $cat->name }}</span>
+  </label>
         @endforeach
       </div>
       @error('category_ids')   <p class="text-error">{{ $message }}</p> @enderror

@@ -1,85 +1,118 @@
-.purchase-container {
-    max-width: 1040px;
-    margin: 24px auto;
-    padding: 0 16px;
+/* コンテナ */
+.purchase-container{
+    max-width:1080px;
+    margin:32px auto 80px;
+    padding:0 20px;
+}
+.purchase-grid{
+    display:grid;
+    grid-template-columns:1fr 360px;
+    gap:48px;
 }
 
-.grid {
-    display: grid;
-    grid-template-columns: 1fr 320px;
-    gap: 24px;
+/* 左：商品ヘッダー */
+.product-row{
+    display:flex;
+    gap:30px;
+}
+.thumb{
+    width:120px;
+    height:120px;
+    object-fit:cover;
+    border-radius:6px;
+    background:#eee;
+}
+.name{
+    margin:0 0 6px;
+    font-weight:700;
+    font-size:26px;
+}
+.price{
+    font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans JP",sans-serif;
+    font-size:30px;
+    letter-spacing:.02em;
+}
+.divider{
+    border:none;
+    border-top:1px solid #000000;
+    margin:24px 0;
 }
 
-.left .thumb {
-    width: 96px;
-    height: 96px;
-    object-fit: cover;
-    border: 1px solid #eee;
+/* 左：フォーム */
+.label{
+    display:block;
+    font-weight:700;
+    margin-bottom:8px;
+}
+.select{
+    width:320px;
+    max-width:100%;
+    border:1px solid #cfcfcf;
+    border-radius:4px;
+    padding:6px 4px;
+    background:#fff;
+    margin:20px 40px;
+}
+.error{
+    color:#e00;
+    font-size:13px;
+    margin-top:6px;
+}
+.ship .ship-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+.addr{
+    margin:20px 40px;
+    line-height:1.8;
+    font-style:normal;
+}
+.link-change{
+    color:#6aa0ff;
+    text-decoration:none;
+    font-size:14px;
+}
+.link-change:hover{
+    text-decoration:underline;
 }
 
-.left .name {
+/* 右：サマリー */
+.purchase-aside{
+    top:24px;
+    height:fit-content;
+}
+.summary-card{
+    border:1px solid #000000;
+    background:#fff;
+    margin-bottom:40px;
+}
+.summary-card .row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:30px 40px;
+    border-bottom:1px solid #000000;
+}
+.summary-card .row:last-child{
+    border-bottom:none;
+}
+.row-label{
+    color:#000000;
+}
+.row-value{
+    font-family:'Inter',system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans JP",sans-serif;
+    font-weight: 400;
+}
+
+/* 購入ボタン */
+.btn-buy{
+    display:block;
+    width:100%;
+    padding:14px 18px;
+    border:none;
+    border-radius:3px;background:#eb5c59;color:#fff;
     font-weight: 700;
-    margin-bottom: 4px;
+    cursor:pointer;
 }
-.left .price {
-    font-size: 20px;
-}
-.left .block:last-of-type {
-    border-bottom: 1px solid black;
-    padding-bottom: 18px;
-}
-.block {
-    margin: 20px 0;
-    border-bottom: black;
-}
-.block-title.between {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.select {
-    width: 260px;
-    padding: 8px;
-}
-.addr {
-    line-height: 1.6;
-    color: black;
-}
-hr {
-    border: none;
-    border-top: 1px solid black;
-    margin: 18px 0;
-}
-
-.right .card {
-    border: 1px solid black;
-    padding: 32px 0;
-    background: #fff;
-}
-.right .card .sum-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 22px 28px;
-}
-.right .card .sum-row + .sum-row {
-    border-top: 1px solid black;
-}
-
-.btn-buy {
-    width: 100%;
-    padding: 14px;
-    margin-top: 16px;
-    border: none;
-    border-radius: 6px;
-    background: #ef4444;
-    color: white;
-}
-.btn-buy:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-}
-.link {
-    font-size: 14px;
-    text-decoration: underline;
-}
+.btn-buy:hover{filter:brightness(.98);}

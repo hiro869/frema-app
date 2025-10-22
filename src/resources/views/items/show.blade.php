@@ -114,11 +114,10 @@
         <ul class="comment-list">
           @forelse($product->comments as $comment)
             <li class="comment">
-              <div class="avatar"></div>
+              <img class="avatar" src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->name }}">
               <div class="comment-body">
                 <div class="head">
                   <span class="name">{{ $comment->user->name }}</span>
-                  <span class="time">{{ $comment->created_at->diffForHumans() }}</span>
                 </div>
                 <p>{{ $comment->body }}</p>
               </div>

@@ -89,7 +89,7 @@ class ItemController extends Controller
         ]);
 
         // ④ カテゴリ紐付け（中間テーブル）
-        $product->categories()->sync($data['category_id']);
+        $product->categories()->sync($data['category_ids']);
 
         // ⑤ 成功時は詳細へ
         return redirect()->route('items.show', $product)

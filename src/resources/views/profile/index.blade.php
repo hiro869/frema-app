@@ -27,11 +27,11 @@
   </div>
 
   <div class="tabs">
-    <a href="{{ route('profile.index',['tab'=>'sold']) }}" class="tab {{ $tab==='sold'?'is-active':'' }}">出品した商品</a>
-    <a href="{{ route('profile.index',['tab'=>'bought']) }}" class="tab {{ $tab==='bought'?'is-active':'' }}">購入した商品</a>
+    <a href="{{ route('profile.index',['page'=>'sell']) }}" class="tab {{ $page==='sell'?'is-active':'' }}">出品した商品</a>
+    <a href="{{ route('profile.index',['page'=>'buy']) }}" class="tab {{ $page==='buy'?'is-active':'' }}">購入した商品</a>
   </div>
 
-  @php $list = $tab==='sold' ? $soldProducts : $boughtProducts; @endphp
+  @php $list = $page==='sold' ? $soldProducts : $boughtProducts; @endphp
   <div class="grid">
     @forelse($list as $product)
       <a href="{{ route('items.show',$product) }}" class="card">
@@ -41,10 +41,10 @@
         </div>
       </a>
     @empty
-      <p class="empty">{{ $tab==='sold'?'出品した商品がありません':'購入した商品がありません' }}。</p>
+      <p class="empty">{{ $page==='sold'?'出品した商品がありません':'購入した商品がありません' }}。</p>
     @endforelse
   </div>
 
-  <div class="pager">{{ $list->appends(['tab'=>$tab])->links() }}</div>
+  <div class="pager">{{ $list->appends(['page'=>$page])->links() }}</div>
 </div>
 @endsection

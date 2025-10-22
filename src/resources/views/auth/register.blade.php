@@ -9,7 +9,7 @@
 <section class="auth-section">
   <h1 class="auth-title">会員登録</h1>
 
-  <form method="POST" action="{{ route('register') }}" class="auth-form">
+  <form method="POST" class="auth-form" action="{{ route('register') }}" novalidate>
     @csrf
 
     <div class="form-group">

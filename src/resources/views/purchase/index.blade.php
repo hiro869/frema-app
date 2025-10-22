@@ -1,98 +1,86 @@
 @extends('layouts.app')
 
 @push('page_css')
-<link rel="stylesheet" href="{{ asset('css/purchase/index.css') }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ asset('css/purchase/index.css') }}">
 @endpush
 
 @section('content')
 <div class="purchase-container">
-
-  <div class="grid">
-    {{-- 左カラム：商品概要 / 支払い / 住所リンク --}}
-    <div class="left">
+  <div class="purchase-grid">
+    {{-- 左カラム --}}
+    <main class="purchase-main">
       <div class="product-row">
         <img class="thumb" src="{{ $product->image_url }}" alt="{{ $product->name }}">
         <div class="meta">
-          <div class="name">{{ $product->name }}</div>
-          <div class="price">¥{{ number_format($product->price) }}</div>
+          <h1 class="name">商品名</h1>
+          <div class="price">¥ {{ number_format($product->price) }}</div>
         </div>
       </div>
 
-      <hr>
+      <hr class="divider">
 
-      {{-- 支払い方法 --}}
-      <div class="block">
-        <div class="block-title">支払い方法</div>
+      <form action="{{ route('purchase.store', $product) }}" method="POST" class="purchase-form">
+        @csrf
 
-        <form id="purchase-form" method="POST" action="{{ route('purchase.store', $product) }}">
-          @csrf
-          <select name="pay_method" class="select">
-            <option value="" hidden>選択してください</option>
-            <option value="convenience" {{ old('pay_method')==='convenience'?'selected':'' }}>コンビニ支払い</option>
-            <option value="card"        {{ old('pay_method')==='card'?'selected':'' }}>カード支払い</option>
+        <section class="field">
+          <label class="label">支払い方法</label>
+          <select name="pay_method" id="payMethod" class="select" required>
+            <option value="">選択してください</option>
+            <option value="card"        {{ old('pay_method')==='card' ? 'selected' : '' }}>クレジットカード</option>
+            <option value="convenience" {{ old('pay_method')==='convenience' ? 'selected' : '' }}>コンビニ払い</option>
           </select>
-          @error('pay_method')
-            <p class="err">{{ $message }}</p>
-          @enderror
-        </form>
+          @error('pay_method') <p class="error">{{ $message }}</p> @enderror
+        </section>
+
+        <hr class="divider">
+
+        <section class="ship">
+          <div class="ship-head">
+            <span class="label">配送先</span>
+            <a class="link-change" href="{{ route('purchase.address', $product) }}">変更する</a>
+          </div>
+          <address class="addr">
+            〒 {{ $ship['zip'] }}<br>
+            {{ $ship['address1'] }}<br>
+            {{ $ship['address2'] }}
+          </address>
+        </section>
+
+        <hr class="divider">
+      </form>
+    </main>
+
+    {{-- 右カラム --}}
+    <aside class="purchase-aside">
+      <div class="summary-card">
+        <div class="row">
+          <span class="row-label">商品代金</span>
+          <strong class="row-value">¥ {{ number_format($product->price) }}</strong>
+        </div>
+        <div class="row">
+          <span class="row-label">支払い方法</span>
+          <span class="row-value" id="summaryMethod">選択してください</span>
+        </div>
       </div>
 
-      <hr>
-
-      {{-- 配送先（プロフィールの住所が初期値） --}}
-      <div class="block">
-        <div class="block-title between">
-          <span>配送先</span>
-          <a class="link" href="{{ route('purchase.address', $product) }}">変更する</a>
-        </div>
-        <div class="addr">
-          <div>〒 {{ $ship['zip'] }}</div>
-          <div>{{ $ship['address1'] }}</div>
-          @if($ship['address2']) <div>{{ $ship['address2'] }}</div> @endif
-        </div>
-      </div>
-    </div>
-
-    <aside class="right">
-        <div class="card">
-            <div class="sum-row">
-                <span>商品代金</span>
-                <span>¥{{ number_format($product->price) }}</span>
-            </div>
-            <div class="sum-row">
-                <span>支払い方法</span>
-                <span id="pay_label">
-                    @if(old('pay_method')==='convenience')コンビニ支払い
-                    @elseif(old('pay_method')==='card') カード支払い
-                    @else 選択してください
-                    @endif
-                </span>
-            </div>
-        </div>
-
-        <button form="purchase-form" class="btn-buy" {{ $product->is_sold ? 'disabled' : ''}}>
-            購入する
-        </button>
+      <form action="{{ route('purchase.store', $product) }}" method="POST">
+        @csrf
+        <input type="hidden" name="pay_method" id="hiddenPayMethod">
+        <button type="submit" class="btn-buy">購入する</button>
+      </form>
     </aside>
+  </div>
 </div>
 
-</div>
-@push('page_js')
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const select = document.querySelector('select[name="pay_method"]');
-        const label = document.getElementById('pay_label');
-        if (!select || !label) return;
-
-        const mapping = {
-            convenience: 'コンビニ支払い',
-            card: 'カード支払い'
-        };
-        select.addEventListener('change', () => {
-            const value = select.value;
-            label.textContent = mapping[value] || '選択してください';
-        });
-    });
+  const sel = document.getElementById('payMethod');
+  const out = document.getElementById('summaryMethod');
+  const hid = document.getElementById('hiddenPayMethod');
+  const label = {card:'クレジットカード', convenience:'コンビニ払い'};
+  function sync(){ const v=sel.value||''; out.textContent=label[v] ?? '選択してください'; hid.value=v; }
+  sel.addEventListener('change', sync); sync();
 </script>
-@endpush
 @endsection

@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>@yield('title', 'COACHTECH')</title>
   <link rel="stylesheet" href="{{ asset('css/layout.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
   @stack('page_css')
 </head>
 <body>

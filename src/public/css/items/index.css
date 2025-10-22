@@ -105,7 +105,45 @@
 }
 
 /* ページャ余白 */
-.pager {
-  margin-top: 28px;
+/* ページネーション */
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin: 32px 0 40px;
+  flex-wrap: wrap;
 }
 
+.custom-page {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.custom-page:hover {
+  background: #ff6b6b;
+  color: #fff;
+  border-color: #ff6b6b;
+}
+
+.custom-page.active {
+  background: #ff6b6b;
+  color: #fff;
+  border-color: #ff6b6b;
+}
+
+.custom-page.disabled {
+  color: #aaa;
+  border-color: #eee;
+  pointer-events: none;
+}
