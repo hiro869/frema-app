@@ -42,3 +42,6 @@
     border: none;
     border-radius: 6px;
 }
+.form-error {
+    color: #ff5555;
+}

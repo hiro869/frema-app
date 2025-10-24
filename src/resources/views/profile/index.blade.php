@@ -31,7 +31,7 @@
     <a href="{{ route('profile.index',['page'=>'buy']) }}" class="tab {{ $page==='buy'?'is-active':'' }}">購入した商品</a>
   </div>
 
-  @php $list = $page==='sold' ? $soldProducts : $boughtProducts; @endphp
+  @php $list = $page==='sell' ? $soldProducts : $boughtProducts; @endphp
   <div class="grid">
     @forelse($list as $product)
       <a href="{{ route('items.show',$product) }}" class="card">

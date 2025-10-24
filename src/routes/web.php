@@ -47,11 +47,14 @@ Route::post('/purchase/address/{item}', [PurchaseController::class, 'updateAddre
 Route::get('/purchase/{item}',    [PurchaseController::class, 'index'])->name('purchase.index')->middleware('auth');
 Route::post('/purchase/{item}',   [PurchaseController::class, 'store'])->name('purchase.store')->middleware('auth');
 
+
 Route::post('/stripe/webhook', [PurchaseController::class, 'webhook'])->name('stripe.webhook');
+
 // 誘導画面
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+
 // 認証完了メール内リンクが来る先ー>プロフィール設定画面へ
 Route::get('/email/verify/{id}/{hash}',function (EmailVerificationRequest $request) {
     $request->fulfill();

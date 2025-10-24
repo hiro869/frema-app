@@ -101,3 +101,10 @@
 .profile-form button:hover {
   background-color: #d63636;
 }
+
+.error-message {
+  color: #d63636;
+  font-size: 14px;
+  margin-top: 4px;
+  display: block;
+}

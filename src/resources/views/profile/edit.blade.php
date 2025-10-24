@@ -17,15 +17,6 @@
   <div class="profile-wrap">
     <h1 class="profile-title">プロフィール設定</h1>
 
-    {{-- エラー表示 --}}
-    @if ($errors->any())
-      <ul class="profile-errors">
-        @foreach ($errors->all() as $error)
-          <li>{{ $error }}</li>
-        @endforeach
-      </ul>
-    @endif
-
     <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="profile-form">
       @csrf
       @method('PATCH')
@@ -34,9 +25,11 @@
       <img id="avatarPreview" class="avatar" src="{{ $avatarUrl }}" alt="">
       <input id="avatarInput" type="file" name="avatar"
       accept="image/png,image/jpeg" class="file-input" />
-
       <label for="avatarInput" class="file-label">画像を選択する</label>
-     </div>
+      @error('avatar')
+        <p class="error-message">{{ $message }}</p>
+      @enderror
+    </div>
 
 <script>
   // 選んだ画像を即プレビュー
@@ -50,27 +43,31 @@
 
       <label class="form-row">
         <span class="form-label">ユーザー名</span>
-        <input type="text" name="name"
-               value="{{ old('name', $isFirst ? '' : $user->name) }}">
+        <input type="text" name="name" value="{{ old('name', $isFirst ? '' : $user->name) }}">
+        @error('name')
+          <p class="error-message">{{ $message }}</p>
+        @enderror
       </label>
 
       <label class="form-row">
         <span class="form-label">郵便番号</span>
-        <input type="text" name="zip"
-               placeholder="123-4567"
-               value="{{ old('zip', $isFirst ? '' : $user->zip) }}">
+        <input type="text" name="zip" placeholder="123-4567" value="{{ old('zip', $isFirst ? '' : $user->zip) }}">
+        @error('zip')
+          <p class="error-message">{{ $message }}</p>
+        @enderror
       </label>
 
       <label class="form-row">
         <span class="form-label">住所</span>
-        <input type="text" name="address1"
-               value="{{ old('address1', $isFirst ? '' : $user->address1) }}">
+        <input type="text" name="address1" value="{{ old('address1', $isFirst ? '' : $user->address1) }}">
+        @error('address1')
+          <p class="error-message">{{ $message }}</p>
+        @enderror
       </label>
 
       <label class="form-row">
         <span class="form-label">建物名</span>
-        <input type="text" name="address2"
-               value="{{ old('address2', $isFirst ? '' : $user->address2) }}">
+        <input type="text" name="address2" value="{{ old('address2', $isFirst ? '' : $user->address2) }}">
       </label>
 
       <button class="profile-submit" type="submit">更新する</button>

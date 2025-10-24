@@ -49,6 +49,8 @@
           </address>
         </section>
 
+        @error('ship') <p class="error">{{ $message }}</p>@enderror
+
         <hr class="divider">
       </form>
     </main>

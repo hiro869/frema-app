@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Http\Requests\ProfileRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -59,19 +60,9 @@ class MypageController extends Controller
     /**
      * プロフィール更新
      */
-    public function update(Request $request)
+    public function update(ProfileRequest $request)
     {
-        $data = $request->validate([
-            'name'     => ['required','string','max:255'],
-            'zip'      => ['nullable','string','max:255'],
-            'address1' => ['nullable','string','max:255'],
-            'address2' => ['nullable','string','max:255'],
-            'avatar'   => ['nullable','image','max:5120'], // 5MB
-        ], [
-            'name.required' => 'ユーザー名を入力してください',
-            'avatar.image'  => '画像ファイルを選択してください',
-            'avatar.max'    => '画像サイズは5MB以下にしてください',
-        ]);
+        $data = $request->validated();
 
         /** @var User $user */
         $user = Auth::user();
@@ -96,3 +87,4 @@ class MypageController extends Controller
         return redirect()->route('profile.index')->with('status', 'プロフィールを更新しました。');
     }
 }
+

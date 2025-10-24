@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
+use App\Http\Requests\PurchaseRequest;
+use App\Http\Requests\AddressRequest;
 use Illuminate\Support\Facades\DB;
 use Stripe\StripeClient;
 use Stripe\Webhook;
@@ -29,19 +31,16 @@ class PurchaseController extends Controller
 }
 
     // 「購入する」→ Stripe Checkout へ
-    public function store(Request $request, Product $item)
+    public function store(PurchaseRequest $request, Product $item)
     {
         // 既に売却済みはNG
         abort_if($item->is_sold, 403);
 
-        $validated = $request->validate([
-            'pay_method' => ['required', 'in:card,convenience'],
-        ],[
-            'pay_method.required' => '支払い方法を選択してください。',
-        ]);
+        $validated = $request->validated();
+        $pay = $validated['pay_method'];
+        $methods = $pay === 'card' ? ['card'] : ['konbini'];
 
-        // Stripe 決済方法
-        $methods = $validated['pay_method'] === 'card' ? ['card'] : ['konbini'];
+
 
         $stripe = new StripeClient(config('services.stripe.secret'));
 
@@ -65,7 +64,7 @@ class PurchaseController extends Controller
             'metadata' => [
                 'product_id'     => $item->id,
                 'buyer_id'       => $request->user()->id,
-                'payment_method' => $validated['pay_method'], // convenience|card
+                'payment_method' => $pay, // convenience|card
             ],
         ]);
 
@@ -80,13 +79,9 @@ class PurchaseController extends Controller
         ]);
     }
 
-    public function updateAddress(Request $request, Product $item)
+    public function updateAddress(AddressRequest $request, Product $item)
     {
-        $validated = $request->validate([
-            'zip' => ['required', 'string'],
-            'address1' => ['required', 'string'],
-            'address2' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
 
         $user = auth()->user();
         $user->update($validated);
