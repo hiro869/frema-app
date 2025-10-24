@@ -1,18 +1,21 @@
 #  coachtechフリマ
 
-##  環境構築
+---
 
-### 🐳 Docker ビルド
+## ⚙️ 環境構築
 
-```bash
+## 🐳 Dockerビルド
 git clone https://github.com/hiro869/frema-app.git
 cd frema-app
 docker compose up -d --build
-⚙️ Laravel 環境構築
+
+## 🌱 Laravel環境構築
 
 docker compose exec app composer install
 cp .env.example .env
-.env の環境変数を以下のように変更：
+.env の設定
+
+#以下のように変更してください：
 
 
 APP_NAME=Frema
@@ -38,20 +41,21 @@ MAIL_PASSWORD=null
 MAIL_ENCRYPTION=null
 MAIL_FROM_ADDRESS="no-reply@example.test"
 MAIL_FROM_NAME="Frema"
-その後に以下を実行してください：
 
+# 実行コマンド
 
 docker compose exec app php artisan key:generate
 docker compose exec app php artisan migrate --seed
 docker compose exec app php artisan storage:link
 docker compose exec app php artisan optimize:clear
-🌐 開発環境URL
+
+## 🌐 開発環境URL
 種類	URL
 アプリケーション	http://localhost/
 Mailhog（メール確認）	http://localhost:8025
 phpMyAdmin（DB確認）	http://localhost:8080
 
-🧩 使用技術（実行環境）
+## 💻 使用技術（実行環境）
 項目	内容
 言語	PHP 8.3
 フレームワーク	Laravel 11.x
@@ -61,6 +65,5 @@ Webサーバー	Nginx 1.25.3
 メール認証	Mailhog
 決済	Stripe（テストモード）
 
-## 🗺️ ER図
-
-![ER図](./public/images/er_diagram.png)
+## 🗺 ER図
+![ER図](src/public/images/er_diagram.png)
