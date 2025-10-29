@@ -10,7 +10,7 @@
 @php
     use Illuminate\Support\Facades\Storage;
     $avatarUrl = $user->avatar_path
-      ? asset('storage/'.$user->avatar_path)
+      ? Storage::url($user->avatar_path)
       : asset('img/avatar-placeholder.png');
 @endphp
 <section class="profile-page">
@@ -31,15 +31,6 @@
       @enderror
     </div>
 
-<script>
-  // 選んだ画像を即プレビュー
-  document.getElementById('avatar').addEventListener('change', e => {
-    const file = e.target.files?.[0];
-    if (file) {
-      document.getElementById('avatarPreview').src = URL.createObjectURL(file);
-    }
-  });
-</script>
 
       <label class="form-row">
         <span class="form-label">ユーザー名</span>

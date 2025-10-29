@@ -60,31 +60,31 @@ class MypageController extends Controller
     /**
      * プロフィール更新
      */
-    public function update(ProfileRequest $request)
-    {
-        $data = $request->validated();
+    public function update(\App\Http\Requests\ProfileRequest $request)
+{
+    // バリデーション済みデータ
+    $data = $request->validated();
 
-        /** @var User $user */
-        $user = Auth::user();
+    /** @var \App\Models\User $user */
+    $user = \Illuminate\Support\Facades\Auth::user();
 
-        // アバターを更新（新規アップロード時のみ）
-        if ($request->hasFile('avatar')) {
-            // 既存ファイルがあれば削除（任意）
-            if ($user->avatar_path && Storage::disk('public')->exists($user->avatar_path)) {
-                Storage::disk('public')->delete($user->avatar_path);
-            }
-            $path = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar_path = $path;
+    // 画像が来ていれば保存（public/avatars へ）
+    if ($request->hasFile('avatar')) {
+        if ($user->avatar_path && \Storage::disk('public')->exists($user->avatar_path)) {
+            \Storage::disk('public')->delete($user->avatar_path);
         }
-
-        // そのほかの項目
-        $user->name     = $data['name'];
-        $user->zip      = $data['zip']      ?? null;
-        $user->address1 = $data['address1'] ?? null;
-        $user->address2 = $data['address2'] ?? null;
-        $user->save();
-
-        return redirect()->route('profile.index')->with('status', 'プロフィールを更新しました。');
+        $path = $request->file('avatar')->store('avatars', 'public');
+        $user->avatar_path = $path;
     }
-}
 
+    // その他フィールド
+    $user->name     = $data['name'];
+    $user->zip      = $data['zip']      ?? null;
+    $user->address1 = $data['address1'] ?? null;
+    $user->address2 = $data['address2'] ?? null;
+
+    $user->save();
+
+    return redirect()->route('profile.index')->with('status', 'プロフィールを更新しました。');
+}
+}

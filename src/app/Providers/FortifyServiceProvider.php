@@ -12,7 +12,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Fortify;
 use Laravel\Fortify\Contracts\RegisterResponse as RegisterResponseContract;
-use Laravel\Fortify\contracts\LoginResponse;
+
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -59,6 +59,7 @@ class FortifyServiceProvider extends ServiceProvider
         /** ===== ログイン認証（FormRequest で検証） ===== */
         Fortify::authenticateUsing(function (Request $request) {
             // LoginRequest のルール／メッセージを使用して検証
+            app()->setLocale('ja'); // これを追加
             $form = app(LoginRequest::class);
 
             Validator::make(

@@ -126,17 +126,19 @@
             <li class="comment empty">こちらにコメントが入ります。</li>
           @endforelse
         </ul>
-
         @auth
-          <form method="POST" action="{{ route('comments.store', $product) }}" class="comment-form">
+          <form method="POST" action="{{ route('comments.store', $product) }}" class="comment-form" novalidate>
             @csrf
             <label class="sec sub">商品へのコメント</label>
-            <textarea name="body" rows="4" placeholder="コメントを書く…">{{ old('body') }}</textarea>
+            <textarea name="body" rows="9" >{{ old('body') }}</textarea>
             @error('body') <p class="err">{{ $message }}</p> @enderror
             <button class="btn-comment">コメントを送信する</button>
           </form>
         @else
-          <p class="login-note">コメントするにはログインしてください。</p>
+        <div class="comment-form disabled">
+        <textarea rows="9" disabled></textarea>
+        <button class="btn-comment" disabled>コメントを送信する</button>
+        </div>
         @endauth
       </div>
     </div>

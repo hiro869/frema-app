@@ -8,6 +8,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+use Illuminate\Support\Facades\Storage;
 
 
 // =================== 商品関連 ===================
@@ -65,3 +66,5 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', '認証メールを再送しました。');
 })->middleware(['auth','throttle:6,1'])->name('verification.send');
+
+
