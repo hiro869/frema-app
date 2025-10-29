@@ -17,14 +17,15 @@
       </a>
 
       {{-- 検索フォーム --}}
-      <div class="search-form">
-        <input
-          type="text"
-          name="keyword"
-          value="{{ request('keyword') }}"
-          placeholder="なにをお探しですか？"
-        >
-      </div>
+      {{-- 元の正しい検索フォーム --}}
+<form action="{{ url('/') }}" method="GET" class="search-form">
+  <input
+    type="text"
+    name="keyword"
+    value="{{ request('keyword') }}"
+    placeholder="なにをお探しですか？"
+  >
+</form>
 
       {{-- ナビゲーション --}}
       <nav class="global-nav">

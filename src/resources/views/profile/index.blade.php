@@ -8,9 +8,15 @@
 @section('content')
 @php
     use Illuminate\Support\Facades\Storage;
-    $avatarUrl = $user->avatar_path
-        ? Storage::url($user->avatar_path)          // 例: /storage/avatars/xxx.jpg
-        : asset('img/avatar-placeholder.png');      // 予備
+
+    $raw = (string) ($user->avatar_path ?? '');
+    $path = ltrim(str_replace(['storage/', 'public/'], '', $raw), '/');
+
+    if ($path !== '' && Storage::disk('public')->exists($path)) {
+        $avatarUrl = asset('storage/' . $path);
+    } else {
+        $avatarUrl = asset('images/notimage-gray.png'); // ← 同じ画像を使用！
+    }
 @endphp
 
 <div class="profile-container">
@@ -18,9 +24,7 @@
   {{-- 上部：左に丸画像、中央にユーザー名、右に赤枠ボタン（1枚目の見本） --}}
   <div class="profile-head">
     <div class="head-left">
-      <img class="avatar" src="{{ $avatarUrl }}"
-           alt=""
-           onerror="this.src='{{ asset('img/avatar-placeholder.png') }}'">
+      <img class="avatar" src="{{ $avatarUrl }}" alt="">
       <h2 class="user-name">{{ $user->name }}</h2>
     </div>
     <a href="{{ route('profile.edit') }}" class="btn-outline">プロフィールを編集</a>

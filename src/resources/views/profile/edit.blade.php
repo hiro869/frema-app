@@ -10,8 +10,8 @@
 @php
     use Illuminate\Support\Facades\Storage;
     $avatarUrl = $user->avatar_path
-      ? Storage::url($user->avatar_path)
-      : asset('img/avatar-placeholder.png');
+      ? asset('storage/' . $user->avatar_path)
+      : asset('images/notimage-gray.png');
 @endphp
 <section class="profile-page">
   <div class="profile-wrap">
@@ -22,7 +22,7 @@
       @method('PATCH')
 
      <div class="avatar-field">
-      <img id="avatarPreview" class="avatar" src="{{ $avatarUrl }}" alt="">
+      <img id="avatarPreview" class="avatar" src="{{ $avatarUrl }}?v=1" >
       <input id="avatarInput" type="file" name="avatar"
       accept="image/png,image/jpeg" class="file-input" />
       <label for="avatarInput" class="file-label">画像を選択する</label>
