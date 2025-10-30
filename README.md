@@ -1,98 +1,185 @@
-#  coachtechフリマ
+# 🛠️ coachtechフリマ
 
 ---
 
-## ⚙️ 環境構築
+## ⚙️ 環境構築手順
 
-## 🐳 Dockerビルド
-`git clone https://github.com/hiro869/frema-app.git`
+## 🐳 1. Docker ビルド
+git clone https://github.com/hiro869/frema-app.git
 
-`cd frema-app`
+cd frema-app
 
-`docker compose up -d --build`
+docker compose up -d --build
 
-## 🌱 Laravel環境構築
+## 🌱 2. Laravel セットアップ
 
-`docker compose exec app composer install`
+docker compose exec app bash -lc "cd /var/www/html/src && composer install"
 
-`cp .env.example .env`
+cp src/.env.example src/.env
 
-`.env の設定`
+## 🧾 3. .env 設定（以下のように変更してください）
 
-### 以下のように変更してください：
+APP_NAME=Frema
 
-`APP_NAME=Frema`
+APP_ENV=local
 
-`APP_ENV=local`
+APP_KEY=base64:VKl3W9kmL3LlS5R2a8XZIwMaeI23bTNja60Tv55wtHc=
 
-`APP_DEBUG=true`
+APP_DEBUG=true
 
-`APP_TIMEZONE=Asia/Tokyo`
+APP_TIMEZONE=Asia/Tokyo
 
-`APP_URL=http://localhost`
+APP_URL=http://localhost
 
-`DB_CONNECTION=mysql`
+APP_LOCALE=ja
 
-`DB_HOST=mysql`
+APP_FALLBACK_LOCALE=ja
 
-`DB_PORT=3306`
+APP_FAKER_LOCALE=ja_JP
 
-`DB_DATABASE=laravel`
+APP_MAINTENANCE_DRIVER=file
 
-`DB_USERNAME=laravel`
+LOG_CHANNEL=stack
 
-`DB_PASSWORD=laravel`
+LOG_LEVEL=debug
 
-`FILESYSTEM_DISK=public`
+DB_CONNECTION=mysql
 
-`MAIL_MAILER=smtp`
+DB_HOST=mysql
 
-`MAIL_HOST=mailhog`
+DB_PORT=3306
 
-`MAIL_PORT=1025`
+DB_DATABASE=laravel
 
-`MAIL_USERNAME=null`
+DB_USERNAME=laravel
 
-`MAIL_PASSWORD=null`
+DB_PASSWORD=laravel
 
-`MAIL_ENCRYPTION=null`
+SESSION_DRIVER=database
 
-`MAIL_FROM_ADDRESS="no-reply@example.test"`
+SESSION_LIFETIME=120
 
-`MAIL_FROM_NAME="Frema"`
+BROADCAST_CONNECTION=log
 
-### 実行コマンド
-`docker compose exec app php artisan key:generate`
+FILESYSTEM_DISK=public
 
-`docker compose exec app php artisan migrate --seed`
+QUEUE_CONNECTION=database
 
-`docker compose exec app php artisan storage:link`
+CACHE_STORE=database
 
-`docker compose exec app php artisan optimize:clear`
+REDIS_CLIENT=phpredis
+
+REDIS_HOST=127.0.0.1
+
+REDIS_PORT=6379
+
+MAIL_MAILER=smtp
+
+MAIL_HOST=mailhog
+
+MAIL_PORT=1025
+
+MAIL_USERNAME=null
+
+MAIL_PASSWORD=null
+
+MAIL_ENCRYPTION=null
+
+MAIL_FROM_ADDRESS="no-reply@example.test"
+
+MAIL_FROM_NAME="${APP_NAME}"
+
+AWS_ACCESS_KEY_ID=
+
+AWS_SECRET_ACCESS_KEY=
+
+AWS_DEFAULT_REGION=ap-northeast-1
+
+AWS_BUCKET=
+
+AWS_USE_PATH_STYLE_ENDPOINT=false
+
+VITE_APP_NAME="${APP_NAME}"
+
+STRIPE_KEY=pk_test_51SHyFqK7g04c0LY0sohtU41paLSviIFMQu1hHGEi1wb7f5fm3gSfNgoK71SxgG4sdxeNc8E5DjmuzCmgZll3Pbx200LQFNQ5WN
+
+STRIPE_SECRET=sk_test_XXXXXXXXXXXXXXXXXXXXXX
+
+## ⚙️ 4. コマンド実行
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan key:generate"
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan migrate --seed"
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan storage:link"
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan optimize:clear"
+
+## 🧩 よくある問題と対処
+
+## ❌ 画像アップロードが反映されない場合
+
+PHP設定（docker/php/conf.d/uploads.ini）
+
+file_uploads = On
+
+upload_max_filesize = 20M
+
+post_max_size = 20M
+
+Nginx設定（docker/nginx/default.conf）
+
+client_max_body_size 20M;
+
+設定変更後
+
+docker compose restart app nginx
+
+⚠️ 419 Page Expired
+
+@csrf がフォーム内に無い場合に発生します。
+
+<form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data">
+  @csrf
+  @method('PATCH')
+</form>
+
+⚙️ storage:link のエラー
+
+The [public/storage] link already exists. は 無視OK（既にリンク済み）。
+
+🧠 .envを変更した後の反映コマンド
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan config:clear && php artisan cache:clear && php artisan optimize:clear"
+docker compose restart app
 
 ## 🌐 開発環境URL
-`種類	URL`
 
-`アプリケーション	http://localhost/`
+種類	URL
 
-`Mailhog（メール確認）	http://localhost:8025`
+アプリケーション	http://localhost/
 
-`phpMyAdmin（DB確認）	http://localhost:8080`
+Mailhog（メール確認）	http://localhost:8025
+
+phpMyAdmin（DB確認）	http://localhost:8080
 
 ## 💻 使用技術（実行環境）
-`言語	PHP 8.3`
 
-`フレームワーク	Laravel 11.x`
+項目	内容
 
-`Webサーバー	Nginx 1.25.3`
+言語	PHP 8.3
 
-`データベース	MySQL 8.0.26`
+フレームワーク	Laravel 11.x
 
-`開発環境	Docker Compose`
+Webサーバー	Nginx 1.25.3
 
-`メール認証	Mailhog`
+データベース	MySQL 8.0.26
 
-`決済	Stripe（テストモード）`
+開発環境	Docker Compose
+
+メール認証	Mailhog
+
+決済	Stripe（テストモード）
 
 ## 🗺 ER図
+
 ![ER図](src/public/images/er_diagram.png)
