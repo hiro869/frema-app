@@ -101,7 +101,7 @@ AWS_USE_PATH_STYLE_ENDPOINT=false
 
 VITE_APP_NAME="${APP_NAME}"
 
-STRIPE_KEY=pk_test_51SHyFqK7g04c0LY0sohtU41paLSviIFMQu1hHGEi1wb7f5fm3gSfNgoK71SxgG4sdxeNc8E5DjmuzCmgZll3Pbx200LQFNQ5WN
+STRIPE_KEY=pk_test_XXXXXXXXXXXXXXXXXXXX
 
 STRIPE_SECRET=sk_test_XXXXXXXXXXXXXXXXXXXXXX
 
@@ -151,6 +151,15 @@ The [public/storage] link already exists. は 無視OK（既にリンク済み�
 🧠 .envを変更した後の反映コマンド
 docker compose exec app bash -lc "cd /var/www/html/src && php artisan config:clear && php artisan cache:clear && php artisan optimize:clear"
 docker compose restart app
+
+## 補足
+
+※ Stripe決済は開発用テストキーを使用しています。
+
+自分の環境で購入処理を試す場合は、Stripeアカウントを作成し、
+
+取得したテストキーを `.env` に設定してください。
+
 
 ## 🌐 開発環境URL
 
