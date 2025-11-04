@@ -9,9 +9,20 @@
 .btn-outline:hover{background:#ef6262;color:#fff}
 
 /* タブ */
-.tabs{display:flex;gap:24px;border-bottom:1px solid #ddd;margin-bottom:24px}
+.tabs{display:flex;gap:24px;margin-bottom:24px;position: relative;border-bottom: none;}
+.tabs::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -1px;
+    width: 100vw;
+    height: 1px;
+    background: #dcdcdc;
+    pointer-events: none;
+}
 .tab{font-weight:500;color:#555;padding-bottom:8px;text-decoration:none}
-.tab.is-active{color:#ef6262;border-bottom:2px solid #ef6262}
+.tab.is-active{color:#ef6262;}
 
 /* カード */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}

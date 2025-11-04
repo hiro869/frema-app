@@ -8,13 +8,13 @@
 
 /* ===== 全体ラップ ===== */
 .profile-wrap {
-  width: 400px; /* 全体の幅を固定 */
+  width: 550px; /* 全体の幅を固定 */
   text-align: center; /* タイトルだけ中央揃え */
 }
 
 /* ===== タイトル ===== */
 .profile-title {
-  font-size: 20px;
+  font-size: 25px;
   font-weight: bold;
   margin-bottom: 20px;
   text-align: center; /* ← 中央寄せ */

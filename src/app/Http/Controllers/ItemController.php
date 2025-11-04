@@ -22,7 +22,7 @@ class ItemController extends Controller
 
         if ($tab === 'mylist') {
             if (Auth::check()) {
-                $query->whereHas('likers', fn($q) => $q->whereKey(Auth::id()));
+                $query->whereHas('likers', fn($likersQuery) => $likersQuery->whereKey(Auth::id()));
             } else {
                 $products = collect();
                 return view('items.index', compact('products','tab','keyword'));

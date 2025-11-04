@@ -10,8 +10,20 @@
 .tabs {
   display: flex;
   gap: 24px;
-  border-bottom: 1px solid #dcdcdc;
   margin-bottom: 16px;
+  position: relative;
+  border-bottom: none;
+}
+.tabs::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -1px;
+  width: 100vw;
+  height: 1px;
+  background: #dcdcdc;
+  pointer-events: none;
 }
 .tab {
   display: inline-block;
@@ -24,15 +36,7 @@
 .tab.is-active {
   color: #e60023; /* 赤 */
 }
-.tab.is-active::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -1px;
-  height: 2px;
-  background: #e60023;
-}
+
 
 /* 空表示 */
 .empty {
@@ -44,7 +48,7 @@
 .grid {
   list-style: none;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 0;
   margin: 16px 0 0;
