@@ -4,20 +4,20 @@
 
 ## ⚙️ 環境構築手順
 
-## 🐳 1. Docker ビルド
+## 🐳Docker ビルド
 git clone https://github.com/hiro869/frema-app.git
 
 cd frema-app
 
 docker compose up -d --build
 
-## 🌱 2. Laravel セットアップ
+## 🌱 Laravel セットアップ
 
 docker compose exec app bash -lc "cd /var/www/html/src && composer install"
 
 cp src/.env.example src/.env
 
-## 🧾 3. .env 設定（以下のように変更してください）
+## 🧾 .env 設定（以下のように変更してください）
 
 APP_NAME=Frema
 
@@ -105,7 +105,7 @@ STRIPE_KEY=pk_test_XXXXXXXXXXXXXXXXXXXX
 
 STRIPE_SECRET=sk_test_XXXXXXXXXXXXXXXXXXXXXX
 
-## ⚙️ 4. コマンド実行
+## ⚙️コマンド実行
 
 docker compose exec app bash -lc "cd /var/www/html/src && php artisan key:generate"
 
@@ -154,13 +154,15 @@ docker compose restart app
 
 ## 補足
 
-※ Stripe決済は開発用テストキーを使用しています。
+## stripeについて
+
+Stripe決済は開発用テストキーを使用しています。
 
 自分の環境で購入処理を試す場合は、Stripeアカウントを作成し、
 
 取得したテストキーを `.env` に設定してください。
 
-※ テストケースについて
+## テストケースについて
 
 主要機能に対してPHPUnitを用いたテストを実装しました。
 
@@ -174,13 +176,13 @@ LoginTest	　　　　ログインの入力チェック・正常ログインの�
 
 ItemIndexTest	　　商品一覧で「SOLD」ラベルが正しく表示されることを確認
 
-⚙️ テスト環境の設定
+## ⚙️ テスト環境の設定
 
-テストせんようの.env.testingを用意しています。
+テスト専用の.env.testingを用意しています。
 
 （DB_DATABASE=laravel_test でMySQLを使用）
 
-🧭 テスト実行方法
+## 🧭 テスト実行方法
 以下のコマンドを順番に実行してください。
 
 テスト用データベース作成（初回のみ）
