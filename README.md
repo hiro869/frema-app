@@ -160,6 +160,55 @@ docker compose restart app
 
 取得したテストキーを `.env` に設定してください。
 
+※ テストケースについて
+
+主要機能に対してPHPUnitを用いたテストを実装しました。
+
+対応してるテストの内容
+
+テスト名　　　　　　　　内容
+
+RegisterTest	　　会員登録のバリデーション・メール認遷移を確認
+
+LoginTest	　　　　ログインの入力チェック・正常ログインの動作確認
+
+ItemIndexTest	　　商品一覧で「SOLD」ラベルが正しく表示されることを確認
+
+⚙️ テスト環境の設定
+
+テストせんようの.env.testingを用意しています。
+
+（DB_DATABASE=laravel_test でMySQLを使用）
+
+🧭 テスト実行方法
+以下のコマンドを順番に実行してください。
+
+テスト用データベース作成（初回のみ）
+
+docker compose exec mysql bash -lc "mysql -u root -proot -e 'CREATE DATABASE IF NOT EXISTS laravel_test;'"
+
+テスト用マイグレーション
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan migrate:fresh --env=testing"
+
+テスト実行
+
+docker compose exec app bash -lc "cd /var/www/html/src && php artisan test --env=testing"
+
+実行した時の例
+PASS  Tests\Feature\Auth\RegisterTest
+
+✓ 名前が未入力だと お名前を入力してください が表示される
+
+✓ 正しい情報ならメール認証画面に遷移する
+
+PASS  Tests\Feature\Auth\LoginTest
+
+✓ 正しい情報ならログインできる
+
+PASS  Tests\Feature\Item\ItemIndexTest
+
+✓ 売却済み商品には SOLD ラベルが表示される
 
 ## 🌐 開発環境URL
 
