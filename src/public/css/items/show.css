@@ -152,7 +152,7 @@
 
 /* カウント数字 */
 .icon-btn span {
-  font-size: 15px;
+  font-size: 14px;
   color: #333;
   margin-left: 2px;
 }
@@ -195,7 +195,11 @@
   transform: scale(1.06);
 }
 
-.icon-btn span {
-  font-size: 16px;
+/* ==== FINAL OVERRIDE: いいね/コメント数を14pxで統一 ==== */
+.detail-container .socials .icon-btn span,
+.detail-container .socials form .icon-btn span {
+  font-size: 14px !important;
+  font-family: inherit !important;
+  line-height: 1;
   color: #333;
 }
